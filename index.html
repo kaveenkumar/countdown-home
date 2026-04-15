@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Countdown to Home</title>
+  <style>
+    :root {
+      --bg1: #0f172a;
+      --bg2: #1e293b;
+      --card: rgba(255,255,255,0.08);
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --accent: #93c5fd;
+      --accent-2: #86efac;
+      --track: rgba(255,255,255,0.12);
+      --shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(147,197,253,0.20), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(134,239,172,0.16), transparent 28%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      padding: 24px;
+    }
+
+    .shell {
+      width: min(960px, 100%);
+      background: var(--card);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .clocks {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(140px, 1fr));
+      gap: 12px;
+      width: min(100%, 360px);
+    }
+
+    .clock {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 12px 14px;
+    }
+
+    .clock .label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .clock .time {
+      font-size: 20px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .main {
+      text-align: center;
+      padding: 18px 8px 12px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(28px, 5vw, 52px);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: clamp(14px, 2vw, 18px);
+      margin-bottom: 30px;
+    }
+
+    .countdown {
+      font-size: clamp(38px, 9vw, 92px);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      margin-bottom: 14px;
+      text-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    }
+
+    .countdown small {
+      font-size: 0.32em;
+      opacity: 0.85;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 30px;
+    }
+
+    .progress-card {
+      margin-top: 8px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      padding: 18px 18px 22px;
+    }
+
+    .route {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .track-wrap {
+      position: relative;
+      height: 78px;
+      display: grid;
+      place-items: center;
+    }
+
+    .track {
+      position: relative;
+      width: 100%;
+      height: 8px;
+      background: var(--track);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .track-fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      border-radius: 999px;
+      transition: width 300ms linear;
+    }
+
+    .plane {
+      position: absolute;
+      top: 4px;
+      left: 0%;
+      transform: translateX(-50%);
+      font-size: 28px;
+      filter: drop-shadow(0 8px 12px rgba(0,0,0,0.25));
+      transition: left 300ms linear, transform 300ms linear;
+      animation: floaty 2.4s ease-in-out infinite;
+    }
+
+    .city {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 90px;
+    }
+
+    .city strong {
+      color: var(--text);
+      font-size: 15px;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 22px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .stats span strong {
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .done {
+      display: none;
+      font-size: clamp(32px, 6vw, 56px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-top: 12px;
+    }
+
+    @keyframes floaty {
+      0%, 100% { transform: translateX(-50%) translateY(0px); }
+      50% { transform: translateX(-50%) translateY(-8px); }
+    }
+
+    @media (max-width: 640px) {
+      .shell { padding: 18px; border-radius: 22px; }
+      .top { margin-bottom: 18px; }
+      .clocks { grid-template-columns: 1fr; width: 100%; }
+      .route { font-size: 12px; }
+      .city { min-width: 64px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="top">
+      <div class="badge">✈️ Countdown home</div>
+      <div class="clocks">
+        <div class="clock">
+          <div class="label">Munich</div>
+          <div id="munichClock" class="time">--:--:--</div>
+        </div>
+        <div class="clock">
+          <div class="label">Vancouver</div>
+          <div id="vancouverClock" class="time">--:--:--</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div id="countdown" class="countdown">000:00:00:00:<small>000</small></div>
+      <div id="meta" class="meta">Live countdown in Munich local time</div>
+      <div id="done" class="done">Back home ✨</div>
+
+      <div class="progress-card">
+        <div class="route">
+          <div class="city" style="text-align:left;"><strong>Munich</strong><span>(:</span></div>
+          <div></div>
+          <div class="city" style="text-align:right;"><strong>Munich</strong><span>:)</span></div>
+        </div>
+
+        <div class="track-wrap">
+          <div class="track">
+            <div id="trackFill" class="track-fill"></div>
+          </div>
+          <div id="plane" class="plane">✈️</div>
+        </div>
+
+        <div class="stats">
+          <span>Progress: <strong id="progressPct">0%</strong></span>
+          <span>Elapsed: <strong id="elapsed">0h</strong></span>
+          <span>Left: <strong id="remaining">0h</strong></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const targetTime = new Date('2026-05-01T10:00:00+02:00');
+
+    // Journey progress reflects: home -> back home.
+    const journeyStart = new Date('2026-04-04T10:00:00+02:00');
+
+    const countdownEl = document.getElementById('countdown');
+    const metaEl = document.getElementById('meta');
+    const doneEl = document.getElementById('done');
+    const munichClockEl = document.getElementById('munichClock');
+    const vancouverClockEl = document.getElementById('vancouverClock');
+    const planeEl = document.getElementById('plane');
+    const trackFillEl = document.getElementById('trackFill');
+    const progressPctEl = document.getElementById('progressPct');
+    const elapsedEl = document.getElementById('elapsed');
+    const remainingEl = document.getElementById('remaining');
+
+    const munichFormatter = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Europe/Berlin',
+      hour: '2-digit', minute: '2-digit', second: '2-digit',
+      hour12: false
+    });
+
+    const vancouverFormatter = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'America/Vancouver',
+      hour: '2-digit', minute: '2-digit', second: '2-digit',
+      hour12: false
+    });
+
+    function pad(num, size) {
+      return String(num).padStart(size, '0');
+    }
+
+    function formatHours(ms) {
+      const totalHours = Math.max(0, ms) / (1000 * 60 * 60);
+      if (totalHours >= 24) return `${(totalHours / 24).toFixed(1)}d`;
+      if (totalHours >= 1) return `${totalHours.toFixed(1)}h`;
+      return `${Math.round(totalHours * 60)}m`;
+    }
+
+    function update() {
+      const now = new Date();
+      const diff = targetTime - now;
+
+      munichClockEl.textContent = munichFormatter.format(now);
+      vancouverClockEl.textContent = vancouverFormatter.format(now);
+
+      if (diff <= 0) {
+        countdownEl.style.display = 'none';
+        metaEl.textContent = 'Back home in Munich local time';
+        doneEl.style.display = 'block';
+        planeEl.style.left = '100%';
+        trackFillEl.style.width = '100%';
+        progressPctEl.textContent = '100%';
+        elapsedEl.textContent = formatHours(targetTime - journeyStart);
+        remainingEl.textContent = '0m';
+        countdownEl.style.display = 'none';
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const remAfterDays = diff % (1000 * 60 * 60 * 24);
+      const hours = Math.floor(remAfterDays / (1000 * 60 * 60));
+      const minutes = Math.floor((remAfterDays % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((remAfterDays % (1000 * 60)) / 1000);
+      const millis = diff % 1000;
+
+      countdownEl.innerHTML = `${pad(days, 3)}:${pad(hours, 2)}:${pad(minutes, 2)}:${pad(seconds, 2)}:<small>${pad(millis, 3)}</small>`;
+      metaEl.textContent = `Target: ${targetTime.toLocaleString('en-GB', {
+        timeZone: 'Europe/Berlin',
+        dateStyle: 'medium',
+        timeStyle: 'medium'
+      })} · Europe/Berlin`;
+
+      const totalJourney = targetTime - journeyStart;
+      const elapsed = now - journeyStart;
+      let pct = (elapsed / totalJourney) * 100;
+      if (!Number.isFinite(pct)) pct = 0;
+      pct = Math.max(0, Math.min(100, pct));
+
+      planeEl.style.left = `${pct}%`;
+      trackFillEl.style.width = `${pct}%`;
+      progressPctEl.textContent = `${pct.toFixed(1)}%`;
+      elapsedEl.textContent = formatHours(elapsed);
+      remainingEl.textContent = formatHours(diff);
+
+      requestAnimationFrame(update);
+    }
+
+    update();
+  </script>
+</body>
+</html>
