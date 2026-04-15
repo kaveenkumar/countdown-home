@@ -1,5 +1,7 @@
 # Countdown to Home ✈️
 
+![countdown screenshot](ss.png)
+
 A beautiful, real-time countdown timer that tracks your journey back home with live timezone clocks and visual progress tracking.
 
 ## Features
