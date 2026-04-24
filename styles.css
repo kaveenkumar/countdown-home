@@ -120,6 +120,78 @@ h1 {
   opacity: 0.85;
 }
 
+.details-panel {
+  width: min(100%, 480px);
+  margin: 0 auto 18px;
+  text-align: left;
+}
+
+.details-panel summary {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.details-panel summary .quote {
+  font-style: italic;
+}
+
+.details-panel summary .author {
+  font-style: normal;
+}
+
+.details-panel summary::-webkit-details-marker {
+  display: none;
+}
+
+.details-panel summary::before {
+  content: '▸';
+  margin-right: 8px;
+  color: var(--accent);
+}
+
+.details-panel[open] summary::before {
+  content: '▾';
+}
+
+.details {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin: 10px 0 0;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.detail-item .value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.detail-item .unit {
+  font-size: 13px;
+  color: var(--muted);
+  text-transform: lowercase;
+}
+
 .meta {
   color: var(--muted);
   font-size: 15px;
@@ -224,6 +296,12 @@ h1 {
   .shell { padding: 18px; border-radius: 22px; }
   .top { margin-bottom: 18px; }
   .clocks { grid-template-columns: 1fr; width: 100%; }
+  .details-panel { margin-bottom: 14px; }
+  .details-panel summary { font-size: 13px; padding: 9px 12px; }
+  .details { gap: 8px; margin-bottom: 14px; }
+  .detail-item { padding: 8px 12px; }
+  .detail-item .value { font-size: 16px; }
+  .detail-item .unit { font-size: 12px; }
   .route { font-size: 12px; }
   .city { min-width: 64px; }
 }

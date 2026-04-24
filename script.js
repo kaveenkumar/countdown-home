@@ -3,10 +3,17 @@ const journeyStart = new Date('2026-04-04T10:00:00+02:00');
 const journeyEnd = new Date('2026-05-01T10:00:00+02:00');
 
 const countdownEl = document.getElementById('countdown');
+const detailsPanelEl = document.getElementById('detailsPanel');
+const detailsEl = document.getElementById('details');
 const metaEl = document.getElementById('meta');
 const doneEl = document.getElementById('done');
 const munichClockEl = document.getElementById('munichClock');
 const vancouverClockEl = document.getElementById('vancouverClock');
+const daysDetailEl = document.getElementById('daysDetail');
+const hoursDetailEl = document.getElementById('hoursDetail');
+const minutesDetailEl = document.getElementById('minutesDetail');
+const secondsDetailEl = document.getElementById('secondsDetail');
+const millisDetailEl = document.getElementById('millisDetail');
 const planeEl = document.getElementById('plane');
 const trackFillEl = document.getElementById('trackFill');
 const progressPctEl = document.getElementById('progressPct');
@@ -45,6 +52,7 @@ function update() {
 
   if (diff <= 0) {
     countdownEl.style.display = 'none';
+    detailsPanelEl.style.display = 'none';
     metaEl.textContent = 'Back home in Munich local time';
     doneEl.style.display = 'block';
     planeEl.style.left = '100%';
@@ -63,8 +71,21 @@ function update() {
   const seconds = Math.floor((remAfterDays % (1000 * 60)) / 1000);
   const millis = diff % 1000;
 
+  const totalDays = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const totalHours = Math.floor(diff / (1000 * 60 * 60));
+  const totalMinutes = Math.floor(diff / (1000 * 60));
+  const totalSeconds = Math.floor(diff / 1000);
+  const totalMillis = Math.floor(diff);
+
+  detailsPanelEl.style.display = '';
+  daysDetailEl.textContent = pad(totalDays, 3);
+  hoursDetailEl.textContent = String(totalHours);
+  minutesDetailEl.textContent = String(totalMinutes);
+  secondsDetailEl.textContent = String(totalSeconds);
+  millisDetailEl.textContent = String(totalMillis);
+
   countdownEl.innerHTML = `${pad(days, 3)}:${pad(hours, 2)}:${pad(minutes, 2)}:${pad(seconds, 2)}:<small>${pad(millis, 3)}</small>`;
-  metaEl.textContent = `Target: ${journeyEnd.toLocaleString('en-GB', {
+  metaEl.textContent = `Target: Fri, ${journeyEnd.toLocaleString('en-GB', {
     timeZone: 'Europe/Berlin',
     dateStyle: 'medium',
     timeStyle: 'medium'
